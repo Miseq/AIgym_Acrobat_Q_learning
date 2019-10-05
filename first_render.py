@@ -1,6 +1,6 @@
 import gym
 
-env = gym.make('Acrobot-v1')
+env = gym.make('MountainCarContinuous-v0')
 env.reset()
 done = False
 steps_to_print = 5
@@ -8,6 +8,7 @@ step = 1
 print(env.observation_space.high)
 print(env.observation_space.low)
 print(env.action_space)
+print(len(env.reward_range))
 while not done:
     env.render()
     action = env.action_space.sample()

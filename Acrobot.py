@@ -4,10 +4,12 @@ import numpy as np
 
 class Acrobot():
 
-    def __init__(self, enviroment='Acrobot-v1', episodes=5000, learning_rate=0.12, discount=0.95, epsilon=1,
-                 times_to_render=10):
+    def __init__(self, enviroment='MountainCarContinuous-v0', episodes=5000, learning_rate=0.12, discount=0.95,
+                 epsilon=1,
+                 times_to_render=10, ):
+
         self.env = gym.make(enviroment)
-        self.discrete_os_size = [20] * len(self.env.observation_space.high)
+        self.discrete_os_size = [7] * len(self.env.observation_space.high)
         self.episodes = episodes
         self.learning_rate = learning_rate
         self.discount = discount
@@ -55,7 +57,10 @@ class Acrobot():
 
     def update_q_table(self, done, q_table, discrete_state, new_discrete_state, action, reward):
         if not done:
-            max_future_q = np.max(q_table[new_discrete_state])
+            try:
+                max_future_q = np.max(q_table[new_discrete_state])
+            except IndexError as ie:
+                max_future_q = np.max(q_table[new_discrete_state - 1])
             current_q = q_table[discrete_state + (action,)]
             new_q = (1 - self.learning_rate) * current_q + self.learning_rate * (reward + self.discount * max_future_q)
             q_table[discrete_state + (action,)] = new_q
